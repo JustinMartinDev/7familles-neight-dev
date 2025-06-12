@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useMode } from '../context/ModeContext';
+import { useMode } from '../../context/ModeContext';
 import AdminPage from './admin-page';
 import DefaultPage from './default-page';
 import UserPage from './user-page';

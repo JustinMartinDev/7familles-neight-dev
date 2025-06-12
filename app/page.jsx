@@ -1,5 +1,5 @@
 import React from 'react';
-import Page from 'pages/page';
+import Page from '../components/pages/page';
 
 export default function HomePage() {
     return (

@@ -1,4 +1,6 @@
-import { useMode } from 'context/ModeContext';
+"use client";
+
+import { useMode } from '../../context/ModeContext'
 import React from 'react';
 
 export default function DefaultPage() {

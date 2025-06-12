@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
-import TirageCarte from 'components/TirageCarte';
-import Statistiques from 'components/Statistiques';
+import TirageCarte from '../TirageCarte';
+import Statistiques from '../Statistiques';
 
 export default function AdminPage() {
     const [cartes, setCartes] = useState([]);
