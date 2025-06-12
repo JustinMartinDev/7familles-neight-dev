@@ -1,7 +1,7 @@
+"use client";
 
 import { useState } from "react";
 
-const cartes = [/* Cartes comme précédemment */];
 
 const poidsRareté = {
   "Commune": 60,
@@ -10,22 +10,24 @@ const poidsRareté = {
   "Ultra rare": 3
 };
 
-function tirerCarte() {
-  const cartesPondérées = cartes.flatMap((carte) =>
-    Array(poidsRareté[carte.rarete] || 1).fill(carte)
-  );
-  const index = Math.floor(Math.random() * cartesPondérées.length);
-  return cartesPondérées[index];
-}
-
 function getDateTime() {
   const now = new Date();
   return now.toLocaleString("fr-FR");
 }
 
-export default function TirageCarte({ isAdmin }) {
+export default function TirageCarte({ isAdmin, cartes }) {
   const [tirage, setTirage] = useState(null);
   const [historique, setHistorique] = useState([]);
+
+  function tirerCarte() {
+    console.log(cartes);
+    
+    const cartesPondérées = cartes.flatMap((carte) =>
+      Array(poidsRareté[carte.rarete] || 1).fill(carte)
+    );
+    const index = Math.floor(Math.random() * cartesPondérées.length);
+    return cartesPondérées[index];
+  }
 
   const handleTirage = () => {
     const nouvelleCarte = tirerCarte();

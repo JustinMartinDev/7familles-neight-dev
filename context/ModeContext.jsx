@@ -8,7 +8,7 @@ export const ModeProvider = ({ children }) => {
 
     const handleSetPassword = async (password) => {
         try {
-            const response = await fetch('/password-check', {
+            const response = await fetch('/api/password-check', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
