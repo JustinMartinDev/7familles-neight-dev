@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Loader from './Loader';
 
 const poidsRareté = {
   Commune: 60,
@@ -14,21 +15,8 @@ function getDateTime() {
   return now.toLocaleString('fr-FR');
 }
 
-export default function TirageCarte({ isAdmin, cartes }) {
+export default function TirageCarte({ isAdmin, cartes, historique, handleRefreshHistorique, loadingHistorique }) {
   const [tirage, setTirage] = useState(null);
-  const [historique, setHistorique] = useState([]);
-
-  const refreshHistorique = async () => {
-    const data = await fetch('/api/get-historique');
-
-    const { historique } = await data.json();
-
-    setHistorique(historique);
-  };
-
-  useEffect(() => {
-    refreshHistorique();
-  }, []);
 
   const addToHistorique = async (nouvelleCarte) => {
     await fetch('/api/add-to-historique', {
@@ -41,18 +29,32 @@ export default function TirageCarte({ isAdmin, cartes }) {
   };
 
   function tirerCarte() {
-    console.log(cartes);
+    const generatedRarete = Math.floor(Math.random() * 100) + 1;
 
-    const cartesPondérées = cartes.flatMap((carte) => Array(poidsRareté[carte.rarete] || 1).fill(carte));
-    const index = Math.floor(Math.random() * cartesPondérées.length);
-    return cartesPondérées[index];
+    let rarete = 'Commune';
+
+    if (generatedRarete <= poidsRareté.Commune) {
+      rarete = 'Commune';
+    } else if (generatedRarete <= poidsRareté['Peu commune'] + poidsRareté.Commune) {
+      rarete = 'Peu commune';
+    } else if (generatedRarete <= poidsRareté.Rare + poidsRareté['Peu commune'] + poidsRareté.Commune) {
+      rarete = 'Rare';
+    } else {
+      rarete = 'Ultra rare'; // 3%
+    }
+
+    const cartesMatchingRarete = cartes.filter((carte) => carte.rarete === rarete);
+
+    const index = Math.floor(Math.random() * cartesMatchingRarete.length);
+
+    return cartesMatchingRarete[index];
   }
 
   const handleTirage = async () => {
     const nouvelleCarte = tirerCarte();
     setTirage(nouvelleCarte);
     await addToHistorique(nouvelleCarte);
-    await refreshHistorique();
+    await handleRefreshHistorique();
   };
 
   const resetHistorique = async () => {
@@ -66,7 +68,7 @@ export default function TirageCarte({ isAdmin, cartes }) {
       method: 'POST'
     });
 
-    await refreshHistorique();
+    await handleRefreshHistorique();
   };
 
   return (
@@ -86,7 +88,16 @@ export default function TirageCarte({ isAdmin, cartes }) {
         </div>
       )}
 
-      {historique.length > 0 && (
+      {loadingHistorique && (
+        <div className="mt-6 max-w-md mx-auto text-left">
+          <div className="flex justify-between items-center mb-2">
+            <Loader />
+            <div className="text-center text-2xl font-bold">Chargement de l'historique...</div>
+          </div>
+        </div>
+      )}
+
+      {historique.length > 0 && !loadingHistorique && (
         <div className="mt-6 max-w-md mx-auto text-left">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-lg font-semibold">Historique des tirages</h3>
