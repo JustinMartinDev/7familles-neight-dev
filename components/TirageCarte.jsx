@@ -44,10 +44,12 @@ export default function TirageCarte({ isAdmin, cartes }) {
       </button>
 
       {tirage && (
-        <div className="mt-4 border rounded p-4 bg-white">
+        <div className="mt-4 border rounded p-4 bg-white text-center justify-self-center">
+          <img src={tirage.path} alt={tirage.nom} className="justify-self-center" style={{ height: '50vh'}} />
           <h2 className="text-xl font-semibold">{tirage.nom}</h2>
           <p>Famille : {tirage.famille}</p>
           <p>Rareté : {tirage.rarete}</p>
+          <p>URL: {window.location.origin}{tirage.path}</p>
         </div>
       )}
 

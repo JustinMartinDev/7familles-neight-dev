@@ -1,10 +1,24 @@
 'use client';
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ModeContext = createContext(undefined);
 
+const LOCAL_STORAGE_KEY = '7_FAMILLE_GAME_NEIGHT_MODE';
+
 export const ModeProvider = ({ children }) => {
   const [mode, setMode] = useState('default');
+
+  useEffect(() => {
+    const mode = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (mode) {
+      setMode(mode);
+    }
+  }, []);
+
+  const disconnect = () => {
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    setMode('default');
+  };
 
   const handleSetPassword = async (password) => {
     try {
@@ -19,8 +33,10 @@ export const ModeProvider = ({ children }) => {
       const { mode: modeResponse } = await response.json();
 
       if (modeResponse === 'admin') {
+        localStorage.setItem(LOCAL_STORAGE_KEY, 'admin');
         setMode('admin');
       } else if (modeResponse === 'user') {
+        localStorage.setItem(LOCAL_STORAGE_KEY, 'user');
         setMode('user');
       } else {
         throw new Error('Invalid password');
@@ -34,7 +50,8 @@ export const ModeProvider = ({ children }) => {
     <ModeContext.Provider
       value={{
         mode,
-        setPassword: handleSetPassword
+        setPassword: handleSetPassword,
+        disconnect
       }}
     >
       {children}

@@ -7,15 +7,20 @@ import DefaultPage from './default-page';
 import UserPage from './user-page';
 
 export default function Page() {
-  const { mode } = useMode();
+  const { mode, disconnect } = useMode();
 
   if (mode === 'default') {
     return <DefaultPage />;
   }
 
-  if (mode === 'admin') {
-    return <AdminPage />;
-  }
+  return (
+    <div>
+      <h2>Connected as {mode}</h2>
+      <button className="btn btn-primary" onClick={() => disconnect()}>
+        Disconnect
+      </button>
+      {mode === 'admin' ? <AdminPage /> : <UserPage />}
+    </div>
+  );
 
-  return <UserPage />;
 }
