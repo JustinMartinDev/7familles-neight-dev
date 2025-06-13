@@ -9,7 +9,7 @@ export default function UserPage() {
     useEffect(() => {
         fetch('/api/get-cartes')
             .then(response => response.json())
-            .then(data => setCartes(data));
+            .then(data => setCartes(data.cartes));
     }, []);
 
 
