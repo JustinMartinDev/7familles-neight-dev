@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const poidsRareté = {
   Commune: 60,
@@ -18,6 +18,28 @@ export default function TirageCarte({ isAdmin, cartes }) {
   const [tirage, setTirage] = useState(null);
   const [historique, setHistorique] = useState([]);
 
+  const refreshHistorique = async () => {
+    const data = await fetch('/api/get-historique');
+
+    const { historique } = await data.json();
+
+    setHistorique(historique);
+  };
+
+  useEffect(() => {
+    refreshHistorique();
+  }, []);
+
+  const addToHistorique = async (nouvelleCarte) => {
+    await fetch('/api/add-to-historique', {
+      method: 'POST',
+      body: JSON.stringify({
+        carte_id: nouvelleCarte.id,
+        date: getDateTime()
+      })
+    });
+  };
+
   function tirerCarte() {
     console.log(cartes);
 
@@ -26,14 +48,25 @@ export default function TirageCarte({ isAdmin, cartes }) {
     return cartesPondérées[index];
   }
 
-  const handleTirage = () => {
+  const handleTirage = async () => {
     const nouvelleCarte = tirerCarte();
     setTirage(nouvelleCarte);
-    setHistorique((prev) => [...prev, { ...nouvelleCarte, date: getDateTime() }]);
+    await addToHistorique(nouvelleCarte);
+    await refreshHistorique();
   };
 
-  const resetHistorique = () => {
-    setHistorique([]);
+  const resetHistorique = async () => {
+    const confirm = window.confirm('Voulez-vous vraiment réinitialiser l\'historique ?');
+
+    if (!confirm) {
+      return;
+    }
+
+    await fetch('/api/reset-historique', {
+      method: 'POST'
+    });
+
+    await refreshHistorique();
   };
 
   return (
@@ -64,11 +97,19 @@ export default function TirageCarte({ isAdmin, cartes }) {
             )}
           </div>
           <ul className="text-sm bg-white shadow rounded p-2 max-h-60 overflow-y-auto">
-            {historique.map((carte, index) => (
-              <li key={index} className="border-b py-1">
-                [{carte.date}] {carte.nom} – {carte.famille} – {carte.rarete}
-              </li>
-            ))}
+            {historique.map((carte, index) => {
+              const carteData = cartes.find((c) => c.id === carte.carte_id);
+
+              if (!carteData) {
+                return null;
+              }
+
+              return (
+                <li key={index} className="border-b py-1">
+                    [{carte.date}] {carteData.name} – {carteData.famille} – {carteData.rarete}
+                  </li>
+                );
+              })}
           </ul>
         </div>
       )}
