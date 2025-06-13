@@ -1,18 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-
+import { useState } from 'react';
 
 const poidsRareté = {
-  "Commune": 60,
-  "Peu commune": 25,
-  "Rare": 12,
-  "Ultra rare": 3
+  Commune: 60,
+  'Peu commune': 25,
+  Rare: 12,
+  'Ultra rare': 3
 };
 
 function getDateTime() {
   const now = new Date();
-  return now.toLocaleString("fr-FR");
+  return now.toLocaleString('fr-FR');
 }
 
 export default function TirageCarte({ isAdmin, cartes }) {
@@ -21,10 +20,8 @@ export default function TirageCarte({ isAdmin, cartes }) {
 
   function tirerCarte() {
     console.log(cartes);
-    
-    const cartesPondérées = cartes.flatMap((carte) =>
-      Array(poidsRareté[carte.rarete] || 1).fill(carte)
-    );
+
+    const cartesPondérées = cartes.flatMap((carte) => Array(poidsRareté[carte.rarete] || 1).fill(carte));
     const index = Math.floor(Math.random() * cartesPondérées.length);
     return cartesPondérées[index];
   }
@@ -32,10 +29,7 @@ export default function TirageCarte({ isAdmin, cartes }) {
   const handleTirage = () => {
     const nouvelleCarte = tirerCarte();
     setTirage(nouvelleCarte);
-    setHistorique((prev) => [
-      ...prev,
-      { ...nouvelleCarte, date: getDateTime() }
-    ]);
+    setHistorique((prev) => [...prev, { ...nouvelleCarte, date: getDateTime() }]);
   };
 
   const resetHistorique = () => {
@@ -45,10 +39,7 @@ export default function TirageCarte({ isAdmin, cartes }) {
   return (
     <div className="p-4 text-center">
       <h1 className="text-2xl font-bold mb-4">🎴 Tirage de Carte</h1>
-      <button
-        className="bg-green-600 text-white px-4 py-2 rounded shadow"
-        onClick={handleTirage}
-      >
+      <button className="bg-green-600 text-white px-4 py-2 rounded shadow" onClick={handleTirage}>
         Tirer une carte
       </button>
 

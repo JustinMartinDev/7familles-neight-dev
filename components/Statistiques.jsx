@@ -1,12 +1,11 @@
-
-import { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { useEffect, useState } from 'react';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const couleurs = {
-  "Commune": "#8884d8",
-  "Peu commune": "#82ca9d",
-  "Rare": "#ffc658",
-  "Ultra rare": "#d84c6f"
+  Commune: '#8884d8',
+  'Peu commune': '#82ca9d',
+  Rare: '#ffc658',
+  'Ultra rare': '#d84c6f'
 };
 
 function countByRarity(hist) {

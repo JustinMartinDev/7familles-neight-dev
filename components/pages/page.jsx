@@ -7,15 +7,15 @@ import DefaultPage from './default-page';
 import UserPage from './user-page';
 
 export default function Page() {
-    const { mode } = useMode();
+  const { mode } = useMode();
 
-    if (mode === 'default') {
-        return <DefaultPage />;
-    }
+  if (mode === 'default') {
+    return <DefaultPage />;
+  }
 
-    if (mode === 'admin') {
-        return <AdminPage />;
-    }
+  if (mode === 'admin') {
+    return <AdminPage />;
+  }
 
-    return <UserPage />;
+  return <UserPage />;
 }
